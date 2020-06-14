@@ -9,7 +9,7 @@ This is the reference PyTorch implementation for training and testing depth esti
 > [ICCV 2019](https://arxiv.org/abs/1806.01260)
 
 <p align="center">
-  <img src="assets/teaser.gif" alt="example input output gif" width="600" />
+  <img src="sample/sample.gif" alt="example input output gif" width="1024" />
 </p>
 
 This code is for non-commercial use; please see the [license file](LICENSE) for terms.
