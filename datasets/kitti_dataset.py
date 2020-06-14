@@ -12,7 +12,7 @@ import numpy as np
 import PIL.Image as pil
 
 from kitti_utils import generate_depth_map
-from .mono_dataset import MonoDataset
+from datasets.mono_dataset import MonoDataset
 
 
 class KITTIDataset(MonoDataset):
@@ -127,3 +127,59 @@ class KITTIDepthDataset(KITTIDataset):
             depth_gt = np.fliplr(depth_gt)
 
         return depth_gt
+
+
+if __name__ == "__main__":
+    import json
+    from utils import *
+    from kitti_utils import *
+    from layers import *
+    import datasets
+    import networks
+    from IPython import embed
+
+    opt_split = "eigen_zhou"
+    opt_png = False
+    opt_data_path = "../kitti_data"
+    opt_height = 192
+    opt_width = 640
+    opt_frame_ids = [0, -1, 1]
+
+
+    # data
+    dataset = KITTIRAWDataset
+    fpath = os.path.join("../splits", opt_split, "{}_files.txt")
+
+    train_filenames = readlines(fpath.format("train"))
+    img_ext = '.png' if opt_png else '.jpg'
+
+    train_dataset = dataset(
+        opt_data_path, train_filenames, opt_height, opt_width,
+        opt_frame_ids, 4, is_train=True, img_ext=img_ext)
+
+    elem = train_dataset[0]
+    print(elem.keys())
+
+    print("\nIntrinsics\n")
+    print(elem['K', 0])
+
+    print("\nIntrinsics\n")
+    print(elem['inv_K', 0])
+
+
+    print("\nColor Image\n")
+    print(elem[('color', 0, 0)].shape)
+
+    print(elem['depth_gt'].max())
+
+
+    import matplotlib.pyplot as plt
+    plt.imshow(elem['color_aug', -1, 0].numpy().transpose(1, 2, 0))
+    plt.show()
+
+    plt.imshow(elem['color', 0, 0].numpy().transpose(1, 2, 0))
+    plt.show()
+
+    plt.imshow(elem['color', 1, 0].numpy().transpose(1, 2, 0))
+    plt.show()
+
